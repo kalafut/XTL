@@ -43,6 +43,7 @@ class State:
         self._init_patterns()
         self._objects = {}
         self._links = {}
+        self._aliases = {}
 
         with open(JOURNAL) as self.f:
             self._parse_file()
@@ -52,6 +53,7 @@ class State:
         self.journal_pats = [
             (re.compile(r'(?P<timestamp>\d+) +LINK +(?P<uid>[0-9a-f]+) +(?P<a_uid>[0-9a-f]+) +(?P<b_uid>[0-9a-f]+) *$'), self._journal_link),
             (re.compile(r'(?P<timestamp>\d+) +CREATE +(?P<uid>[0-9a-f]+) +(?P<data>.*?) *$'), self._journal_add_object),
+            (re.compile(r'(?P<timestamp>\d+) +ALIAS +(?P<uid>[0-9a-f]+) +(?P<data>.*?) *$'), self._journal_alias),
             ]
 
     def _add_object(self, o):
@@ -72,6 +74,10 @@ class State:
 
     def _journal_link(self, vals):
         self._add_link(Link(**vals))
+
+    #def _journal_alias(self, vals):
+    #    if
+    #    self._add_link(Link(**vals))
 
     def _parse_file(self):
         for line in self.f:
@@ -99,8 +105,9 @@ class State:
                 return True
         return False
 
+    @property
     def q(self):
-        return Query(self.getall(), self)
+        return Query(iter(self.getall()), self)
 
 
 class Query:
@@ -108,7 +115,7 @@ class Query:
         self._results = start
         self._state = state
 
-    def v(self):
+    def __iter__(self):
         return self._results
 
     def linked(self, uid):
@@ -132,9 +139,10 @@ def parse_cmd(args):
     cmd, rem = args[0], ' '.join(args[1:])
     emit_event(commands[cmd], rem)
 
+
 def todo_list(s: State):
-    todos = s.q().search('blah').linked('aaaaaaaa')
-    for t in todos.v():
+    todos = s.q.linked('Tasks')
+    for t in todos:
         print(t.data)
 
 if __name__ == '__main__':
