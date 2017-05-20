@@ -53,7 +53,7 @@ class State:
         self.journal_pats = [
             (re.compile(r'(?P<timestamp>\d+) +LINK +(?P<uid>[0-9a-f]+) +(?P<a_uid>[0-9a-f]+) +(?P<b_uid>[0-9a-f]+) *$'), self._journal_link),
             (re.compile(r'(?P<timestamp>\d+) +CREATE +(?P<uid>[0-9a-f]+) +(?P<data>.*?) *$'), self._journal_add_object),
-            (re.compile(r'(?P<timestamp>\d+) +ALIAS +(?P<uid>[0-9a-f]+) +(?P<data>.*?) *$'), self._journal_alias),
+            #(re.compile(r'(?P<timestamp>\d+) +ALIAS +(?P<uid>[0-9a-f]+) +(?P<data>.*?) *$'), self._journal_alias),
             ]
 
     def _add_object(self, o):
@@ -144,8 +144,3 @@ def todo_list(s: State):
     todos = s.q.linked('Tasks')
     for t in todos:
         print(t.data)
-
-if __name__ == '__main__':
-    s = State()
-    todo_list(s)
-    #parse_cmd(sys.argv[1:])

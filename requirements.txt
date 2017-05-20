@@ -1,5 +1,7 @@
 appdirs==1.4.3
 click==6.7
 packaging==16.8
+prompt-toolkit==1.0.14
 pyparsing==2.2.0
 six==1.10.0
+wcwidth==0.1.7
